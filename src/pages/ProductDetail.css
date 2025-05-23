@@ -1,0 +1,11 @@
+.product-detail {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.product-detail img {
+  max-width: 300px;
+  width: 100%;
+}
