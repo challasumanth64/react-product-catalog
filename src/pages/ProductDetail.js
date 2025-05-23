@@ -1,46 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import Loader from '../components/Loader';
+import { useParams } from 'react-router-dom';
 import './ProductDetail.css';
 
-const ProductDetail = () => {
+function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     fetch(`https://fakestoreapi.com/products/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Product not found');
-        return res.json();
-      })
-      .then(data => {
-        setProduct(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        setError('Failed to fetch product');
-        setLoading(false);
-      });
+      .then(res => res.json())
+      .then(data => setProduct(data));
   }, [id]);
 
-  if (loading) return <Loader />;
-  if (error) return <p>{error}</p>;
+  if (!product) return <p>Loading...</p>;
 
   return (
     <div className="product-detail">
-      <img src={product.image} alt={product.title} />
-      <div>
-        <h1>{product.title}</h1>
-        <p>${product.price}</p>
-        <p>{product.description}</p>
-        <span>{product.category}</span>
-        <br />
-        <Link to="/">← Back to Products</Link>
+      <img src={product.image} alt={product.title} className="detail-image" />
+      <div className="detail-info">
+        <h2>{product.title}</h2>
+        <p className="category">{product.category}</p>
+        <p className="description">{product.description}</p>
+        <p className="price">$ {product.price}</p>
+        <p className="stars">{'★'.repeat(Math.round(product.rating.rate))}</p>
+        <button className="btn">Add to Cart</button>
       </div>
     </div>
   );
-};
+}
 
 export default ProductDetail;
